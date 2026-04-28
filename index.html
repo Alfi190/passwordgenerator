@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Password Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="card-container">
+        <header class="header">
+            <h2>Password Generator</h2>
+            <button id="theme-toggle" aria-label="Ganti Tema">🌙</button>
+        </header>
+
+        <div class="result-container">
+            <span id="password-display">P@ssw0rdAkanMunculDisini</span>
+            <button id="copy-btn" title="Salin ke Papan Klip">📋</button>
+        </div>
+
+        <div class="strength-container">
+            <span>Kekuatan:</span>
+            <div id="strength-bar" class="strength-bar weak">Lemah</div>
+        </div>
+        <p id="strength-text" class="strength-feedback">Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.</p>
+
+        <div class="setting">
+            <label for="length-slider">Panjang Password: <span id="length-value">16</span></label>
+            <input type="range" id="length-slider" min="6" max="32" value="16">
+        </div>
+
+        <div class="options">
+            <label class="checkbox-container">
+                <input type="checkbox" id="lowercase" checked>
+                <span class="checkmark"></span> Huruf Kecil (a-z)
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="uppercase" checked>
+                <span class="checkmark"></span> Huruf Besar (A-Z)
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="numbers" checked>
+                <span class="checkmark"></span> Angka (0-9)
+            </label>
+            <label class="checkbox-container">
+                <input type="checkbox" id="symbols" checked>
+                <span class="checkmark"></span> Simbol (!@#$%^&*)
+            </label>
+        </div>
+
+        <button id="generate-btn">Generate Password</button>
+
+        <div class="history-container">
+            <h3>Riwayat Password</h3>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
