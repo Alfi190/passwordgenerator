@@ -102,11 +102,19 @@ themeToggleBtn.addEventListener('click', () => {
 
 // --- Core Logic ---
 
-// Fungsi Kriptografi acak agar tidak bias 
+// Fungsi Kriptografi acak agar tidak bias (menghapus modulo bias)
 function getSecureRandom(max) {
     const array = new Uint32Array(1);
-    window.crypto.getRandomValues(array);
-    return array[0] % max;
+    const maxUint32 = 4294967296; // 2^32
+    const limit = maxUint32 - (maxUint32 % max);
+
+    let r;
+    do {
+        window.crypto.getRandomValues(array);
+        r = array[0];
+    } while (r >= limit);
+
+    return r % max;
 }
 
 // Fungsi utama pembuat password
