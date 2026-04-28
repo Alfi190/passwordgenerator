@@ -31,6 +31,4 @@ Karena ini adalah aplikasi client-side, tidak diperlukan instalasi khusus.
 
 Alat ini menggunakan algoritma **Fisher-Yates Shuffle** dan **Web Crypto API** untuk memastikan password tidak hanya acak, tetapi juga terdistribusi dengan baik dan tahan terhadap bias. Tidak ada data yang dikirim ke server; semua proses terjadi secara lokal di browser Anda.
 
-## 📄 Lisensi
 
-Proyek ini bersifat open-source dan tersedia di bawah [Lisensi MIT](LICENSE).
