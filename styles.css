@@ -223,11 +223,36 @@ input[type="range"] {
     padding-top: 15px;
     border-top: 1px solid var(--border);
 }
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 .history-container h3 {
     font-size: 1rem;
     color: var(--text-muted);
-    margin-bottom: 10px;
+    margin-bottom: 0;
 }
+
+#clear-history {
+    background: transparent;
+    border: 1px solid var(--weak);
+    color: var(--weak);
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+#clear-history:hover {
+    background: var(--weak);
+    color: white;
+}
+
 #history-list {
     list-style: none;
 }

@@ -13,6 +13,7 @@ const strengthBar = document.getElementById('strength-bar');
 const strengthLabel = document.getElementById('strength-label');
 const strengthText = document.getElementById('strength-text');
 const historyList = document.getElementById('history-list');
+const clearHistoryBtn = document.getElementById('clear-history');
 
 // --- Karakter Referensi ---
 const randomFunc = {
@@ -235,3 +236,13 @@ function renderHistory() {
         historyList.appendChild(li);
     });
 }
+
+// Event Hapus Riwayat
+clearHistoryBtn.addEventListener('click', () => {
+    if (passwordHistory.length === 0) return;
+    
+    if (confirm('Apakah Anda yakin ingin menghapus semua riwayat password?')) {
+        passwordHistory = [];
+        renderHistory();
+    }
+});
