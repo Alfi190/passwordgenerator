@@ -19,13 +19,21 @@
         </div>
 
         <div class="strength-container">
-            <span>Kekuatan:</span>
-            <div id="strength-bar" class="strength-bar weak">Lemah</div>
+            <div class="strength-info">
+                <span>Kekuatan Password:</span>
+                <span id="strength-label">Lemah</span>
+            </div>
+            <div class="strength-meter">
+                <div id="strength-bar" class="strength-bar weak"></div>
+            </div>
+            <p id="strength-text" class="strength-feedback">Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.</p>
         </div>
-        <p id="strength-text" class="strength-feedback">Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.</p>
 
         <div class="setting">
-            <label for="length-slider">Panjang Password: <span id="length-value">16</span></label>
+            <div class="setting-label">
+                <label for="length-slider">Panjang Password (6-32):</label>
+                <input type="number" id="length-input" min="6" max="32" value="16">
+            </div>
             <input type="range" id="length-slider" min="6" max="32" value="16">
         </div>
 

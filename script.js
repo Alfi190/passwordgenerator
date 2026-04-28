@@ -1,7 +1,7 @@
 // --- DOM Elements ---
 const resultEl = document.getElementById('password-display');
 const lengthEl = document.getElementById('length-slider');
-const lengthValueEl = document.getElementById('length-value');
+const lengthInputEl = document.getElementById('length-input');
 const uppercaseEl = document.getElementById('uppercase');
 const lowercaseEl = document.getElementById('lowercase');
 const numbersEl = document.getElementById('numbers');
@@ -10,6 +10,7 @@ const generateBtn = document.getElementById('generate-btn');
 const copyBtn = document.getElementById('copy-btn');
 const themeToggleBtn = document.getElementById('theme-toggle');
 const strengthBar = document.getElementById('strength-bar');
+const strengthLabel = document.getElementById('strength-label');
 const strengthText = document.getElementById('strength-text');
 const historyList = document.getElementById('history-list');
 
@@ -28,14 +29,46 @@ const randomFunc = {
 let passwordHistory = [];
 
 // --- Event Listeners ---
-// Update angka pada slider secara realtime
+// Sinkronisasi Slider -> Input Angka
 lengthEl.addEventListener('input', (e) => {
-    lengthValueEl.innerText = e.target.value;
+    lengthInputEl.value = e.target.value;
+});
+
+// Sinkronisasi Input Angka -> Slider (Tanpa maksa ubah angka saat ngetik)
+lengthInputEl.addEventListener('input', (e) => {
+    let value = parseInt(e.target.value);
+    if (!isNaN(value)) {
+        // Slider tetap sinkron dalam batas 6-32
+        lengthEl.value = Math.min(Math.max(value, 6), 32);
+    }
+});
+
+// Validasi & Clamping saat user klik di luar input (blur)
+lengthInputEl.addEventListener('blur', () => {
+    let value = parseInt(lengthInputEl.value);
+    
+    if (isNaN(value) || value < 6) {
+        lengthInputEl.value = 6;
+    } else if (value > 32) {
+        lengthInputEl.value = 32;
+    }
+    lengthEl.value = lengthInputEl.value;
 });
 
 // Event klik tombol Generate
 generateBtn.addEventListener('click', () => {
-    const length = +lengthEl.value;
+    let length = parseInt(lengthInputEl.value);
+
+    // Final check sebelum generate
+    if (isNaN(length) || length < 6) {
+        length = 6;
+    } else if (length > 32) {
+        length = 32;
+    }
+    
+    lengthInputEl.value = length;
+    lengthEl.value = length;
+
     const hasLower = lowercaseEl.checked;
     const hasUpper = uppercaseEl.checked;
     const hasNumber = numbersEl.checked;
@@ -45,7 +78,7 @@ generateBtn.addEventListener('click', () => {
     
     // Trigger Animasi
     resultEl.classList.remove('animate-pop');
-    void resultEl.offsetWidth; // Trigger reflow untuk reset animasi
+    void resultEl.offsetWidth; 
     resultEl.classList.add('animate-pop');
 });
 
@@ -69,7 +102,7 @@ themeToggleBtn.addEventListener('click', () => {
 
 // --- Core Logic ---
 
-// Fungsi Kriptografi acak agar tidak bias (Unbiased Random)
+// Fungsi Kriptografi acak agar tidak bias 
 function getSecureRandom(max) {
     const array = new Uint32Array(1);
     window.crypto.getRandomValues(array);
@@ -136,21 +169,25 @@ function updateStrength(password, typesCount) {
     if (typesCount >= 3) score += 1;
     if (typesCount >= 4) score += 1;
 
+    // Hitung lebar bar (minimal 10% agar tetap terlihat)
+    let width = Math.max((score / 6) * 100, 10);
+    strengthBar.style.width = `${width}%`;
+
     if (score <= 2) {
         strengthBar.classList.add('weak');
-        strengthBar.innerText = 'Lemah';
+        strengthLabel.innerText = 'Lemah';
         strengthText.innerText = 'Password terlalu pendek atau kurang variasi. Gunakan minimal 8 karakter dengan campuran huruf, angka, dan simbol.';
     } else if (score <= 4) {
         strengthBar.classList.add('medium');
-        strengthBar.innerText = 'Cukup';
+        strengthLabel.innerText = 'Cukup';
         strengthText.innerText = 'Cukup baik, tetapi bisa lebih kuat dengan menambah panjang atau menggunakan lebih banyak simbol.';
     } else if (score === 5) {
         strengthBar.classList.add('strong');
-        strengthBar.innerText = 'Kuat';
+        strengthLabel.innerText = 'Kuat';
         strengthText.innerText = 'Password kuat! Kombinasi karakter sudah bagus dan sulit ditebak.';
     } else {
         strengthBar.classList.add('very-strong');
-        strengthBar.innerText = 'Sangat Kuat';
+        strengthLabel.innerText = 'Sangat Kuat';
         strengthText.innerText = 'Sangat aman! Password ini memiliki tingkat keamanan yang sangat tinggi.';
     }
 }
