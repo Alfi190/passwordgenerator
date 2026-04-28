@@ -2,13 +2,9 @@
 
 Aplikasi web pembuat password yang elegan, aman, dan mudah digunakan. Dibuat menggunakan teknologi web standar (vanilla), aplikasi ini memprioritaskan keamanan sekaligus estetika.
 
-## 🎮 Demo & Simulator
+## 🚀 Live Demo
 
-Lihat dan coba aplikasi secara langsung tanpa harus mengunduh kode:
-
-- **[Live Preview (GitHub Pages)](https://Alfi190.github.io/passwordgenerator/)**
-- **[Buka di StackBlitz](https://stackblitz.com/github/Alfi190/passwordgenerator)**
-- **[Buka di CodeSandbox](https://codesandbox.io/s/github/Alfi190/passwordgenerator)**
+Lihat aplikasi secara langsung: **[Cek di sini (GitHub Pages)](https://Alfi190.github.io/passwordgenerator/)**
 
 ## ✨ Fitur Utama
 
