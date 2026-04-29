@@ -213,12 +213,10 @@ function renderHistory() {
     historyList.innerHTML = '';
     passwordHistory.forEach(pass => {
         const li = document.createElement('li');
-        li.className = 'history-item';
-        
+
         const passText = document.createElement('span');
         passText.innerText = pass;
-        passText.className = 'history-pass-text';
-        
+
         const copyBtnHistory = document.createElement('button');
         copyBtnHistory.innerText = '📋';
         copyBtnHistory.className = 'copy-history-btn';
