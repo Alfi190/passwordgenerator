@@ -231,6 +231,27 @@ input[type="range"] {
     margin-bottom: 10px;
 }
 
+.history-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#toggle-all-history {
+    background: none;
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+
+#toggle-all-history:hover {
+    background-color: var(--border);
+}
+
 .history-container h3 {
     font-size: 1rem;
     color: var(--text-muted);
@@ -269,15 +290,30 @@ input[type="range"] {
     border: 1px solid var(--border);
 }
 
-.copy-history-btn {
+.history-pass-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.history-pass-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.toggle-history-btn, .copy-history-btn {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 1rem;
     padding: 0;
-    margin-left: 10px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
 }
 
-.copy-history-btn:hover {
+.toggle-history-btn:hover, .copy-history-btn:hover {
     transform: scale(1.1);
 }

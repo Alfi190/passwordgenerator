@@ -14,6 +14,7 @@ const strengthLabel = document.getElementById('strength-label');
 const strengthText = document.getElementById('strength-text');
 const historyList = document.getElementById('history-list');
 const clearHistoryBtn = document.getElementById('clear-history');
+const toggleAllHistoryBtn = document.getElementById('toggle-all-history');
 
 // --- Karakter Referensi ---
 const randomFunc = {
@@ -28,6 +29,7 @@ const randomFunc = {
 
 // State untuk History
 let passwordHistory = [];
+let allPasswordsVisible = false;
 
 // --- Event Listeners ---
 // Sinkronisasi Slider -> Input Angka
@@ -211,11 +213,29 @@ function addToHistory(password) {
 
 function renderHistory() {
     historyList.innerHTML = '';
-    passwordHistory.forEach(pass => {
+    passwordHistory.forEach((pass, index) => {
         const li = document.createElement('li');
 
+        const passWrapper = document.createElement('div');
+        passWrapper.className = 'history-pass-wrapper';
+
         const passText = document.createElement('span');
-        passText.innerText = pass;
+        passText.innerText = allPasswordsVisible ? pass : '••••••••'; 
+        passText.className = 'history-pass-text';
+        passText.dataset.visible = allPasswordsVisible ? 'true' : 'false';
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.innerText = allPasswordsVisible ? '🙈' : '👁️';
+        toggleBtn.className = 'toggle-history-btn';
+        toggleBtn.title = allPasswordsVisible ? 'Sembunyikan Password' : 'Lihat Password';
+        
+        toggleBtn.onclick = () => {
+            const isVisible = passText.dataset.visible === 'true';
+            passText.innerText = isVisible ? '••••••••' : pass;
+            passText.dataset.visible = !isVisible;
+            toggleBtn.innerText = isVisible ? '👁️' : '🙈';
+            toggleBtn.title = isVisible ? 'Lihat Password' : 'Sembunyikan Password';
+        };
 
         const copyBtnHistory = document.createElement('button');
         copyBtnHistory.innerText = '📋';
@@ -229,11 +249,25 @@ function renderHistory() {
             });
         };
 
-        li.appendChild(passText);
+        passWrapper.appendChild(passText);
+        passWrapper.appendChild(toggleBtn);
+        
+        li.appendChild(passWrapper);
         li.appendChild(copyBtnHistory);
         historyList.appendChild(li);
     });
 }
+
+// Event Toggle All
+toggleAllHistoryBtn.addEventListener('click', () => {
+    if (passwordHistory.length === 0) return;
+    
+    allPasswordsVisible = !allPasswordsVisible;
+    renderHistory();
+    
+    toggleAllHistoryBtn.innerText = allPasswordsVisible ? '🙈' : '👁️‍🗨️';
+    toggleAllHistoryBtn.title = allPasswordsVisible ? 'Sembunyikan Semua' : 'Tampilkan Semua';
+});
 
 // Event Hapus Riwayat
 clearHistoryBtn.addEventListener('click', () => {
