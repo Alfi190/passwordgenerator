@@ -28,8 +28,22 @@ const randomFunc = {
 };
 
 // State untuk History
-let passwordHistory = [];
+let passwordHistory = JSON.parse(localStorage.getItem('passwordHistory')) || [];
 let allPasswordsVisible = false;
+
+// --- Helper Functions ---
+function clampLength(value) {
+    if (isNaN(value) || value < 6) return 6;
+    if (value > 32) return 32;
+    return value;
+}
+
+function syncLength(value) {
+    const clamped = clampLength(value);
+    lengthInputEl.value = clamped;
+    lengthEl.value = clamped;
+    return clamped;
+}
 
 // --- Event Listeners ---
 // Sinkronisasi Slider -> Input Angka
@@ -37,40 +51,22 @@ lengthEl.addEventListener('input', (e) => {
     lengthInputEl.value = e.target.value;
 });
 
-// Sinkronisasi Input Angka -> Slider (Tanpa maksa ubah angka saat ngetik)
+// Sinkronisasi Input Angka -> Slider
 lengthInputEl.addEventListener('input', (e) => {
     let value = parseInt(e.target.value);
     if (!isNaN(value)) {
-        // Slider tetap sinkron dalam batas 6-32
-        lengthEl.value = Math.min(Math.max(value, 6), 32);
+        lengthEl.value = clampLength(value);
     }
 });
 
-// Validasi & Clamping saat user klik di luar input (blur)
+// Validasi & Clamping saat blur
 lengthInputEl.addEventListener('blur', () => {
-    let value = parseInt(lengthInputEl.value);
-    
-    if (isNaN(value) || value < 6) {
-        lengthInputEl.value = 6;
-    } else if (value > 32) {
-        lengthInputEl.value = 32;
-    }
-    lengthEl.value = lengthInputEl.value;
+    syncLength(parseInt(lengthInputEl.value));
 });
 
 // Event klik tombol Generate
 generateBtn.addEventListener('click', () => {
-    let length = parseInt(lengthInputEl.value);
-
-    // Final check sebelum generate
-    if (isNaN(length) || length < 6) {
-        length = 6;
-    } else if (length > 32) {
-        length = 32;
-    }
-    
-    lengthInputEl.value = length;
-    lengthEl.value = length;
+    const length = syncLength(parseInt(lengthInputEl.value));
 
     const hasLower = lowercaseEl.checked;
     const hasUpper = uppercaseEl.checked;
@@ -105,10 +101,9 @@ themeToggleBtn.addEventListener('click', () => {
 
 // --- Core Logic ---
 
-// Fungsi Kriptografi acak agar tidak bias (menghapus modulo bias)
 function getSecureRandom(max) {
     const array = new Uint32Array(1);
-    const maxUint32 = 4294967296; // 2^32
+    const maxUint32 = 4294967296; 
     const limit = maxUint32 - (maxUint32 % max);
 
     let r;
@@ -120,42 +115,34 @@ function getSecureRandom(max) {
     return r % max;
 }
 
-// Fungsi utama pembuat password
 function generatePassword(lower, upper, number, symbol, length) {
     let generatedPassword = '';
-    const typesCount = lower + upper + number + symbol;
     const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]);
 
-    // Validasi: Jika tidak ada checkbox yang dipilih
-    if (typesCount === 0) {
+    if (typesArr.length === 0) {
         alert('Tolong pilih minimal satu jenis karakter!');
         return '';
     }
 
-    // Pastikan setiap jenis karakter yang dipilih muncul minimal 1 kali
     for(let i = 0; i < typesArr.length; i++) {
         const funcName = Object.keys(typesArr[i])[0];
         generatedPassword += randomFunc[funcName]();
     }
 
-    // Isi sisa panjang password secara acak
     for(let i = typesArr.length; i < length; i++) {
         const randomType = typesArr[getSecureRandom(typesArr.length)];
         const funcName = Object.keys(randomType)[0];
         generatedPassword += randomFunc[funcName]();
     }
 
-    // Acak ulang (shuffle) hasil akhir agar karakter awal tidak selalu berurutan sesuai checkbox
     const finalPassword = shuffleString(generatedPassword);
     
-    // Update UI Kekuatan & Riwayat
-    updateStrength(finalPassword, typesCount);
+    updateStrength(finalPassword, typesArr.length);
     addToHistory(finalPassword);
 
     return finalPassword;
 }
 
-// Fungsi pengacak string (Fisher-Yates Shuffle)
 function shuffleString(str) {
     let arr = str.split('');
     for (let i = arr.length - 1; i > 0; i--) {
@@ -165,22 +152,18 @@ function shuffleString(str) {
     return arr.join('');
 }
 
-// Logika Indikator Kekuatan Password dengan Penjelasan Detail
 function updateStrength(password, typesCount) {
-    strengthBar.className = 'strength-bar'; // Reset
+    strengthBar.className = 'strength-bar'; 
     let score = 0;
 
-    // Skor berdasarkan panjang
     if (password.length >= 8) score += 1;
     if (password.length >= 12) score += 1;
     if (password.length >= 16) score += 1;
 
-    // Skor berdasarkan variasi karakter
     if (typesCount >= 2) score += 1;
     if (typesCount >= 3) score += 1;
     if (typesCount >= 4) score += 1;
 
-    // Hitung lebar bar (minimal 10% agar tetap terlihat)
     let width = Math.max((score / 6) * 100, 10);
     strengthBar.style.width = `${width}%`;
 
@@ -203,11 +186,12 @@ function updateStrength(password, typesCount) {
     }
 }
 
-// Mengelola array riwayat password (Maksimal 5)
 function addToHistory(password) {
     if(!password) return;
-    passwordHistory.unshift(password); // Tambahkan ke awal array
-    if (passwordHistory.length > 5) passwordHistory.pop(); // Batasi 5 riwayat
+    passwordHistory.unshift(password);
+    if (passwordHistory.length > 5) passwordHistory.pop();
+    
+    localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
     renderHistory();
 }
 
@@ -215,7 +199,6 @@ function renderHistory() {
     historyList.innerHTML = '';
     passwordHistory.forEach((pass, index) => {
         const li = document.createElement('li');
-
         const passWrapper = document.createElement('div');
         passWrapper.className = 'history-pass-wrapper';
 
@@ -251,7 +234,6 @@ function renderHistory() {
 
         passWrapper.appendChild(passText);
         passWrapper.appendChild(toggleBtn);
-        
         li.appendChild(passWrapper);
         li.appendChild(copyBtnHistory);
         historyList.appendChild(li);
@@ -261,10 +243,8 @@ function renderHistory() {
 // Event Toggle All
 toggleAllHistoryBtn.addEventListener('click', () => {
     if (passwordHistory.length === 0) return;
-    
     allPasswordsVisible = !allPasswordsVisible;
     renderHistory();
-    
     toggleAllHistoryBtn.innerText = allPasswordsVisible ? '🙈' : '👁️‍🗨️';
     toggleAllHistoryBtn.title = allPasswordsVisible ? 'Sembunyikan Semua' : 'Tampilkan Semua';
 });
@@ -272,9 +252,12 @@ toggleAllHistoryBtn.addEventListener('click', () => {
 // Event Hapus Riwayat
 clearHistoryBtn.addEventListener('click', () => {
     if (passwordHistory.length === 0) return;
-    
     if (confirm('Apakah Anda yakin ingin menghapus semua riwayat password?')) {
         passwordHistory = [];
+        localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
         renderHistory();
     }
 });
+
+// Initialize History on Load
+renderHistory();
