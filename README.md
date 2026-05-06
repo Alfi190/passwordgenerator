@@ -17,11 +17,6 @@ Aplikasi web pembuat password yang elegan, aman, dan mudah digunakan. Dibuat men
 -   **Salin Sekali Klik:** Salin password ke papan klip dengan cepat disertai konfirmasi visual.
 -   **Desain Responsif:** Optimal untuk tampilan desktop maupun perangkat seluler.
 
-##  Teknologi yang Digunakan
-
--   **HTML5:** Struktur semantik.
--   **CSS3:** Layout modern (Flexbox), CSS Variables untuk tema, dan transisi halus.
--   **JavaScript (ES6+):** Logika utama, manipulasi DOM, dan fitur keamanan tanpa library eksternal.
 
 
 
