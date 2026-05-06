@@ -4,7 +4,7 @@ Aplikasi web pembuat password yang elegan, aman, dan mudah digunakan. Dibuat men
 
 ##  Live Demo
 
-  **[Cek di sini (GitHub Pages)](https://Alfi190.github.io/passwordgenerator/)**
+  **[Cek di sini](https://Alfi190.github.io/passwordgenerator/)**
 
 ##  Fitur Utama
 
